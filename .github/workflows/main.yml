@@ -4,10 +4,22 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - uses: action/checkout 
-      - run: docker compose build ml_model
-      - run: docker tag ml_model lce/monrepoondockerhub
-      - run: docker login -p ${{LOGIN_SECRET}}
-      - run: docker push lce/monrepo      
-      - run: ssh ubuntu@17.2.2.1 "docker compose pull lce/monrepoondocker"
-      - run: "(re)start container"
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker compose build ml_model
+      - name: Tag Docker image
+        run: docker tag ml_model lce/monrepoondockerhub
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ sami.carret@epita.fr }}" --password-stdin
+      - name: Push Docker image
+        run: docker push lce/monrepoondockerhub
+      - name: Deploy to VM
+        env:
+          VM_PASSWORD: Supermotdepasse!42
+        run: |
+          sshpass -p "$VM_PASSWORD" ssh -o StrictHostKeyChecking=no ubuntu@20.86.55.5 << EOF
+            docker pull lce/monrepoondockerhub
+            docker stop ml_model_container || true
+            docker rm ml_model_container || true
+            docker run -d --name ml_model_container lce/monrepoondockerhub
+          EOF
