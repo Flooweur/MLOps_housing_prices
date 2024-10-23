@@ -21,5 +21,5 @@ jobs:
             docker pull flooweur/my_mlops_repo
             docker stop ml_model_container || true
             docker rm ml_model_container || true
-            docker run -d -p 8068:8068 --name ml_model_container flooweur/my_mlops_repo
+            docker run -d -p 8068:8000 --name ml_model_container flooweur/my_mlops_repo
           EOF
