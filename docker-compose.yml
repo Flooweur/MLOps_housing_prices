@@ -4,4 +4,4 @@ services:
   ml_model:
     build: .
     ports:
-      - "8000:8000"
+      - "8068:8068"
