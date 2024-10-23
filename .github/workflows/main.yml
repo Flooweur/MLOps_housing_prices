@@ -10,4 +10,4 @@ jobs:
       - run: docker login -p ${{LOGIN_SECRET}}
       - run: docker push lce/monrepo      
       - run: ssh ubuntu@17.2.2.1 "docker compose pull lce/monrepoondocker"
-      - rn: "(re)start container"
+      - run: "(re)start container"
