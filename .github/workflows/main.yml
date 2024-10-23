@@ -8,18 +8,18 @@ jobs:
       - name: Build Docker image
         run: docker compose build ml_model
       - name: Tag Docker image
-        run: docker tag mlops_housing_prices-ml_model lce/monrepoondockerhub
+        run: docker tag mlops_housing_prices-ml_model flooweur/my_mlops_repo
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
       - name: Push Docker image
-        run: docker push lce/monrepoondockerhub
+        run: docker push flooweur/my_mlops_repo
       - name: Deploy to VM
         env:
           VM_PASSWORD: Supermotdepasse!42
         run: |
           sshpass -p "$VM_PASSWORD" ssh -o StrictHostKeyChecking=no ubuntu@20.86.55.5 << EOF
-            docker pull lce/monrepoondockerhub
+            docker pull flooweur/my_mlops_repo
             docker stop ml_model_container || true
             docker rm ml_model_container || true
-            docker run -d --name ml_model_container lce/monrepoondockerhub
+            docker run -d --name ml_model_container flooweur/my_mlops_repo
           EOF
