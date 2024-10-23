@@ -4,7 +4,7 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
-      - use: action/checkout 
+      - uses: action/checkout 
       - run: docker compose build ml_model
       - run: docker tag ml_model lce/monrepoondockerhub
       - run: docker login -p ${{LOGIN_SECRET}}
